@@ -1,0 +1,33 @@
+/* Design tokens + canvas grid */
+:root {
+  --canvas: #080B10; --card: #0F131C; --card-2: #141925; --border: rgba(255,255,255,0.08); --border-2: rgba(255,255,255,0.14);
+  --ink: #E6E9EF; --ink-2: #A7B0C0; --mute: #64748B;
+  --brand: #FF4D4D; --brand-2: #E53E3E;
+  --g: #10B981; --g-bg: rgba(16,185,129,0.12);
+  --y: #F59E0B; --y-bg: rgba(245,158,11,0.12);
+  --r: #EF4444; --r-bg: rgba(239,68,68,0.12);
+  --na: #64748B; --na-bg: rgba(100,116,139,0.14);
+  --alert: #F97316; --alert-bg: rgba(249,115,22,0.13);
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  --sans: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --radius: 12px;
+}
+html, body { margin: 0; height: 100%; }
+body {
+  background-color: #080b10;
+  background-image: linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+                    linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+  background-size: 32px 32px;
+  color: var(--ink); font: 14px/1.45 var(--sans);
+}
+* { box-sizing: border-box; }
+a { color: #93C5FD; }
+.mono { font-family: var(--mono); }
+.mute { color: var(--mute); } .ink2 { color: var(--ink-2); } .small { font-size: 12px; } .xs { font-size: 11px; }
+.card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
+.hidden { display: none !important; }
+/* status pills */
+.pill { display: inline-flex; align-items: center; gap: 5px; font: 700 10.5px var(--mono); letter-spacing: .4px; padding: 3px 8px; border-radius: 999px; white-space: nowrap; }
+.st-g { color: var(--g); background: var(--g-bg); } .st-y { color: var(--y); background: var(--y-bg); } .st-r { color: var(--r); background: var(--r-bg); }
+.st-na { color: var(--na); background: var(--na-bg); } .st-alert { color: var(--alert); background: var(--alert-bg); }
+.tc-g { color: var(--g); } .tc-y { color: var(--y); } .tc-r { color: var(--r); } .tc-na { color: var(--na); } .tc-alert { color: var(--alert); }

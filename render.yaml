@@ -1,0 +1,12 @@
+services:
+  - type: web
+    name: redflag-terminal
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: SEC_USER_AGENT
+        sync: false   # e.g. "RedFlag Terminal you@yourdomain.com" (SEC requires a contact e-mail)
+      - key: ANTHROPIC_API_KEY
+        sync: false   # optional: enables the LLM Mapper Agent (forced-choice tagging, temperature 0)

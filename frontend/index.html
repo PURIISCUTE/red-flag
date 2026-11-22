@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RedFlag Terminal — Forensic Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="src/styles/grid.css">
+<link rel="stylesheet" href="src/styles/app.css">
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="sidebar" id="sidebar"></aside>
+  <div>
+    <header class="topbar" id="topbar"></header>
+    <main class="content" id="main"></main>
+  </div>
+</div>
+<div class="legal">© 2026 RedFlag Terminal. For informational purposes only — not investment advice. Data prioritized via SEC EDGAR XBRL, Yahoo Finance, and Benchmark Feeds.</div>
+
+<!-- PDF export libraries (optional; a print-ready fallback is used if they cannot load) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js" defer></script>
+
+<!-- Data + deterministic engine -->
+<script src="src/data/library.js"></script>
+<script src="src/data/demo.js"></script>
+<script src="src/engine/engine.js"></script>
+<!-- Services & utilities -->
+<script src="src/services/api.js"></script>
+<script src="src/utils/format.js"></script>
+<script src="src/utils/finRows.js"></script>
+<script src="src/utils/summary.js"></script>
+<script src="src/utils/pdfExport.js"></script>
+<!-- Components -->
+<script src="src/components/Sidebar.js"></script>
+<script src="src/components/Header.js"></script>
+<script src="src/components/CompanyCard.js"></script>
+<script src="src/components/LiveChart.js"></script>
+<script src="src/components/ExecutiveSummary.js"></script>
+<script src="src/components/ProfilePipeline.js"></script>
+<script src="src/components/FlagMatrix.js"></script>
+<script src="src/components/FinancialTable.js"></script>
+<script src="src/components/Views.js"></script>
+<script src="src/app.js"></script>
+</body>
+</html>
