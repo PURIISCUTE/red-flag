@@ -4,9 +4,9 @@ POST /api/v1/analyze {"ticker": "PFE"}  -> locked profile + 3 FY (+ base year) +
 GET  /api/v1/quote/{ticker}              -> live price / change / market cap
 GET  /api/v1/search?q=PF                 -> ticker autocomplete from SEC's ticker list
 GET  /api/v1/health
-The dashboard (../frontend) is served at "/", so one Render web service hosts everything.
+The dashboard (../public) is served at "/", so one Render web service hosts everything.
 
-Flag routing and grading run in the dashboard's engine (frontend/src/engine/engine.js) so the
+Flag routing and grading run in the dashboard's engine (public/src/engine/engine.js) so the
 exact same deterministic code grades every ticker, online or in the offline demo."""
 from pathlib import Path
 
@@ -117,6 +117,8 @@ def analyze(req: AnalyzeRequest):
     }
 
 
-FRONTEND = Path(__file__).resolve().parent.parent.parent / "frontend"
-if FRONTEND.exists():
+# Dashboard files live in /public (Vercel serves that folder from its CDN; locally FastAPI serves it).
+ROOT = Path(__file__).resolve().parent.parent.parent
+FRONTEND = next((p for p in (ROOT / "public", ROOT / "frontend") if (p / "index.html").exists()), None)
+if FRONTEND:
     app.mount("/", StaticFiles(directory=FRONTEND, html=True), name="frontend")

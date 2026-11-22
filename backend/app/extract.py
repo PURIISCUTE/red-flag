@@ -1,6 +1,6 @@
 """Turn SEC companyfacts XBRL into the engine's input fields: 4 fiscal years (3 graded + 1 base) and TTM.
 
-Field keys match frontend/src/engine/engine.js. Values in $ millions; share counts in thousands."""
+Field keys match public/src/engine/engine.js. Values in $ millions; share counts in thousands."""
 from datetime import date
 
 # field -> ordered list of us-gaap concepts (first one found wins, per fiscal year)
