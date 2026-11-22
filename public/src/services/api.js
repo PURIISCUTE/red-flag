@@ -1,5 +1,4 @@
-/* API client for the FastAPI backend (POST /api/v1/analyze). Falls back to the offline demo when the
-   backend is unreachable. Override the base URL with ?api=https://your-app.onrender.com or the
+/* API client for the FastAPI backend (POST /api/v1/analyze). Live data only — no offline demo. Override the base URL with ?api=https://your-app.onrender.com or the
    Settings box in the sidebar (stored in localStorage). */
 (function () {
   const store = {
@@ -36,12 +35,14 @@
       return live;
     },
     async analyze(ticker) {
-      if (live !== false) {
-        try { const d = await req('/api/v1/analyze', { method: 'POST', body: JSON.stringify({ ticker }) }); live = true; return d; }
-        catch (e) { if (e.status) throw e; live = false; }
+      try { const d = await req('/api/v1/analyze', { method: 'POST', body: JSON.stringify({ ticker }) }, 120000); live = true; return d; }
+      catch (e) {
+        if (e.status) throw e;
+        live = false;
+        throw Object.assign(new Error(e.name === 'AbortError'
+          ? `SEC download for ${ticker} took too long — please try again (the second attempt uses the cache).`
+          : `Can't reach the RedFlag API at ${BASE}. Check that the backend is running.`), { offline: true });
       }
-      if (window.RF_DEMO[ticker]) return JSON.parse(JSON.stringify(window.RF_DEMO[ticker]));
-      throw Object.assign(new Error('Backend offline — only the AAPL demo is available. Start the backend to analyze ' + ticker + '.'), { offline: true });
     },
     async quote(ticker) { if (!live) return null; try { return await req('/api/v1/quote/' + encodeURIComponent(ticker), {}, 10000); } catch (e) { return null; } },
     async search(q) { if (!live || !q) return []; try { return await req('/api/v1/search?q=' + encodeURIComponent(q), {}, 5000); } catch (e) { return []; } }

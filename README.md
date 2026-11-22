@@ -4,8 +4,6 @@ A forensic-accounting dashboard. Type any SEC-registered ticker. The app pulls t
 
 ## Run it
 
-**Quick look (no install):** double-click `public/index.html`. Without the backend it runs the bundled **AAPL demo** (real FY2023–FY2025 10-K data). The live chart still works when you're online.
-
 **Full version (any ticker):**
 ```bash
 ./run.sh            # macOS / Linux   (Windows: run.bat)
@@ -32,7 +30,7 @@ If you host the dashboard somewhere else, point it at the API with `?api=https:/
 | 5–6. Grade | `engine.js` → `gradeFlag()` | Evaluators cover all 62 distinct formulas, so **867 of 867 flags** are wired. Grades are Green / Yellow / Red against the library thresholds. Grey "OK" is excluded from the score; Grey "NOT OK" raises a disclosure alert with no deduction. |
 | Score | `engine.js` → `score()` | 100 × (G + 0.5·Y) / graded. Flags with an identical formula on both sides count once. |
 
-Grading runs in the browser engine, so the offline demo and the live backend use exactly the same code.
+Grading runs in the browser engine, so every ticker is graded by the same deterministic code. All data is live from SEC EDGAR and Yahoo Finance; there is no offline demo.
 
 ## Project layout
 ```
@@ -42,7 +40,6 @@ backend/data/       Master Flag Library (.xlsx source)
 public/index.html dashboard shell (runs from file:// or from the API server)
 public/src/engine/engine.js        deterministic mapping, routing, grading
 public/src/data/library.js         867 flags generated from the Excel file
-public/src/data/demo.js            AAPL offline payload (same shape as the API)
 public/src/services/api.js         API hooks: analyze / quote / search, with demo fallback
 public/src/components/             Sidebar, Header, CompanyCard, LiveChart, ExecutiveSummary,
                                      ProfilePipeline, FlagMatrix, FinancialTable, Views

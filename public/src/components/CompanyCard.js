@@ -10,7 +10,7 @@
     const chg = q && q.change != null ? `<span class="mono ${q.change >= 0 ? 'tc-g' : 'tc-r'}">${q.change >= 0 ? '+' : ''}${q.change.toFixed(2)} (${q.changePct >= 0 ? '+' : ''}${q.changePct.toFixed(2)}%)</span>` : '';
     const price = q && q.price != null
       ? `<span class="p">$${q.price.toFixed(2)}</span>${chg}<span class="small mute">Market cap <b class="ink2">${f.big(q.marketCap)}</b> · Yahoo Finance${q.marketTime ? ' · ' + new Date(q.marketTime * 1000).toLocaleTimeString() : ''}</span>`
-      : `<span class="small mute">Live price streams in the chart below${window.RF_API.live ? '' : ' · start the backend for Yahoo Finance quote & market cap'}</span>`;
+      : `<span class="small mute">Live price streams in the chart below${window.RF_API.live ? ' · Yahoo quote unavailable right now' : ''}</span>`;
     return `<div class="card company">
       <div>
         <div class="co-tk">${f.esc(co.ticker)}</div>

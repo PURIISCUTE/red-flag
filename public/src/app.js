@@ -30,7 +30,6 @@
     $('#topbar').innerHTML = window.RFC.Header(S);
     const m = $('#main'); let html = '';
     if (S.error) html += `<div class="banner ${S.error.kind || 'err'}">${window.RF_FMT.esc(S.error.msg)}</div>`;
-    if (S.co && S.co.demo && S.view === 'dashboard') html += `<div class="banner info">Offline demo: Apple FY2025 10-K data bundled with the app. Start the backend (see README) to analyze any SEC-registered ticker live.</div>`;
     if (S.view === 'watchlist') html += window.RFC.Watchlist(S);
     else if (S.view === 'thresholds') html += window.RFC.Thresholds(S);
     else if (S.view === 'reports') html += window.RFC.Reports(S);
@@ -41,7 +40,7 @@
         <div class="row">${window.RFC.FlagMatrix(S)}</div>
         <div class="row">${window.RFC.FinancialTable(S)}</div>
         <div class="card mod small mute">Primary filing: <a href="${S.co.filingUrl}" target="_blank" rel="noopener">${window.RF_FMT.esc(S.co.name)} ${window.RF_FMT.esc(S.co.form || '10-K')} (${window.RF_FMT.esc(S.co.fiscalYear)}) on SEC EDGAR ↗</a><br>${window.RF_FMT.esc(S.co.sources ? S.co.sources.footnotes : '')}<br>${window.RF_FMT.esc(S.co.sources ? S.co.sources.market : '')}</div>`;
-    } else html += '<div class="card empty">Search a ticker to begin.</div>';
+    } else html += `<div class="card empty">${window.RF_API.live === false ? 'The live API is not reachable. <button class="chipf" data-open="' + window.RF_FMT.esc(S.ticker) + '">Retry</button>' : 'Search any NYSE / NASDAQ ticker to begin.'}</div>`;
     m.innerHTML = html;
     $('#app').classList.toggle('collapsed', !!S.collapsed);
     if (S.view === 'dashboard' && S.co) window.RFC.LiveChart.mount(S);
@@ -55,7 +54,7 @@
     if (!t) return;
     S.ticker = t; S.error = null; S.openFlag = null; S.tab = 'ALL'; S.statusFilter = 'ALL'; S.view = 'dashboard'; S.lens = 'AUTO';
     const ld = document.createElement('div'); ld.className = 'loading';
-    ld.innerHTML = `<div class="box">&gt; ${t}: checking profile lock…<br>&gt; pulling SEC EDGAR filings (3 FY + TTM)…<br>&gt; decomposing segments · 20% gate…<br>&gt; routing 13 categories · grading flags…</div>`;
+    ld.innerHTML = `<div class="box">&gt; ${t}: checking profile lock…<br>&gt; pulling SEC EDGAR filings (3 FY + TTM)…<br>&gt; decomposing segments · 20% gate…<br>&gt; routing 13 categories · grading flags…<br><span style="color:#64748B">first run of a ticker can take 10–40 s</span></div>`;
     document.body.appendChild(ld);
     try {
       S.co = await window.RF_API.analyze(t);
@@ -63,7 +62,8 @@
       clearInterval(quoteTimer);
       if (window.RF_API.live) quoteTimer = setInterval(refreshQuote, 15000);
     } catch (e) {
-      S.error = { msg: e.message, kind: e.offline ? 'warn' : 'err' };
+      S.error = { msg: e.message, kind: 'err' };
+      if (S.co && S.co.ticker !== t) S.error.msg += ` Still showing ${S.co.ticker}.`;
     } finally { ld.remove(); render(); }
   }
   async function refreshQuote() {
@@ -91,7 +91,7 @@
     if (el.id === 'libToggle') { S.showLib = !S.showLib; renderMainOnly(); return; }
     if (el.id === 'collapse') { S.collapsed = !S.collapsed; $('#app').classList.toggle('collapsed', S.collapsed); return; }
     if (el.id === 'wlAdd') { window.RFC.Watchlist.add(S); render(); toast(S.co.ticker + ' added to watchlist'); return; }
-    if (el.id === 'apiSave') { window.RF_API.setBase($('#apiBase').value); window.RF_API.health().then(() => { render(); toast(window.RF_API.live ? 'Backend connected' : 'Backend not reachable — demo mode'); }); return; }
+    if (el.id === 'apiSave') { window.RF_API.setBase($('#apiBase').value); window.RF_API.health().then(() => { render(); toast(window.RF_API.live ? 'Backend connected' : 'Backend not reachable'); }); return; }
     if (el.id === 'exportBtn') { const r = window.exportAuditPDF(S.cards ? S : null); if (r.ok) window.RFC.Reports.log(S); toast(r.msg); return; }
   });
   document.addEventListener('change', e => { if (e.target.id === 'lens' && S.co) { S.lens = e.target.value; compute(); render(); } });

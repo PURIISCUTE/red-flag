@@ -44,9 +44,8 @@ def search(q: str = ""):
 
 @app.get("/api/v1/quote/{ticker}")
 def get_quote(ticker: str):
-    ticker = ticker.upper()
+    ticker, info = _lookup(ticker.upper())
     shares = None
-    info = sec.ticker_map().get(ticker)
     if info:
         try:
             shares = extract.shares_outstanding(sec.companyfacts(info["cik"]))
@@ -58,10 +57,27 @@ def get_quote(ticker: str):
         raise HTTPException(502, f"Quote unavailable: {e}")
 
 
+def _lookup(ticker: str):
+    """SEC lists class shares with a dash (BRK-B); users type BRK.B or BRK/B."""
+    tm = sec.ticker_map()
+    for t in (ticker, ticker.replace(".", "-"), ticker.replace("/", "-"), ticker.replace("-", ".")):
+        if t in tm:
+            return t, tm[t]
+    return ticker, None
+
+
 @app.post("/api/v1/analyze")
 def analyze(req: AnalyzeRequest):
-    ticker = req.ticker.strip().upper()
-    info = sec.ticker_map().get(ticker)
+    try:
+        return _analyze(req.ticker.strip().upper())
+    except HTTPException:
+        raise
+    except Exception as e:  # surface a readable reason instead of a bare 500
+        raise HTTPException(502, f"Could not analyze {req.ticker.upper()}: {type(e).__name__}: {e}")
+
+
+def _analyze(ticker: str):
+    ticker, info = _lookup(ticker)
     if not info:
         raise HTTPException(404, f"{ticker} is not an SEC-registered ticker.")
     cik = info["cik"]

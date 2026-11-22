@@ -21,7 +21,7 @@
     return `<div class="brand"><div class="brand-mark">${I(ICONS.flag, 17)}</div><div class="brand-name">RED<b>FLAG</b> Terminal<span class="brand-badge">BETA</span></div></div>
       <nav class="nav">${nav.map(([k, l]) => `<button data-nav="${k}" class="${s.view === k ? 'active' : ''}">${I(ICONS[k])}<span>${l}</span></button>`).join('')}</nav>
       <div class="side-foot">
-        <div class="feed"><span class="pulse ${live ? '' : 'amber'}"></span><span class="txt">${live ? 'SEC EDGAR • Yahoo Finance • Benchmarks' : live === false ? 'Offline demo — backend not reachable' : 'Connecting…'}</span></div>
+        <div class="feed"><span class="pulse ${live ? '' : 'amber'}"></span><span class="txt">${live ? 'SEC EDGAR • Yahoo Finance • Benchmarks' : live === false ? 'API not reachable' : 'Connecting…'}</span></div>
         <div class="api-box"><input id="apiBase" value="${window.RF_FMT.esc(window.RF_API.base)}" title="Backend URL"><button id="apiSave">Set</button></div>
       </div>`;
   };
