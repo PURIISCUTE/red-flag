@@ -7,8 +7,9 @@ import threading
 import time
 from pathlib import Path
 
-DB_PATH = Path(os.environ.get("RF_DB_PATH", Path(__file__).resolve().parent.parent / "cache" / "redflag.db"))
-DB_PATH.parent.mkdir(parents=True, exist_ok=True)
+from .sec import CACHE_DIR
+
+DB_PATH = Path(os.environ.get("RF_DB_PATH", CACHE_DIR / "redflag.db"))
 _lock = threading.Lock()
 
 

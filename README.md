@@ -13,6 +13,8 @@ A forensic-accounting dashboard. Type any SEC-registered ticker. The app pulls t
 ```
 It needs Python 3.10+. Set `SEC_USER_AGENT="RedFlag Terminal you@yourdomain.com"`, because the SEC requires a contact e-mail.
 
+**Deploy to Vercel (API + dashboard together):** import the repo, leave **Root Directory empty** (repo root) and Framework Preset on **Other**. Then add the environment variable `SEC_USER_AGENT`. `vercel.json` and `api/index.py` handle the rest.
+
 **Deploy to Render:** push this folder to GitHub, then choose *New → Blueprint* (it reads `render.yaml`). One web service serves both the API and the dashboard.
 If you host the dashboard somewhere else, point it at the API with `?api=https://your-app.onrender.com` or with the box in the sidebar.
 

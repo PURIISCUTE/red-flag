@@ -9,8 +9,19 @@ import urllib.request
 from pathlib import Path
 
 UA = os.environ.get("SEC_USER_AGENT", "RedFlag Terminal research contact@example.com")
-CACHE_DIR = Path(os.environ.get("RF_CACHE_DIR", Path(__file__).resolve().parent.parent / "cache"))
-CACHE_DIR.mkdir(parents=True, exist_ok=True)
+def _writable_dir(preferred: Path) -> Path:
+    """Serverless hosts (Vercel, Lambda) only allow writes under /tmp."""
+    for d in ([] if os.environ.get("VERCEL") else [preferred]) + [Path("/tmp/redflag-cache")]:
+        try:
+            d.mkdir(parents=True, exist_ok=True)
+            (d / ".w").write_text("ok")
+            return d
+        except OSError:
+            continue
+    return Path("/tmp")
+
+
+CACHE_DIR = _writable_dir(Path(os.environ.get("RF_CACHE_DIR", Path(__file__).resolve().parent.parent / "cache")))
 _lock = threading.Lock()
 _last = [0.0]
 
